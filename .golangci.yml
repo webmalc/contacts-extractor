@@ -91,7 +91,7 @@ linters:
     - nestif
     - nilnil
     - nlreturn
-    - noctx
+    # - noctx
     - nonamedreturns
     - predeclared
     - revive

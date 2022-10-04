@@ -1,3 +1,4 @@
 log_path: logs/app.log
+yeahdesk_token: token
 is_prod: true
 timezone: UTC
