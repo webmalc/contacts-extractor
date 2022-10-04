@@ -11,7 +11,7 @@ GODEP=godepgraph -s -o  github.com/webmalc/contacts-extractor-backend github.com
 BINARY_NAME=contacts_extractor.app
 
 threshold:
-	overcover --coverprofile coverage.out --threshold 80 --summar
+	overcover --coverprofile coverage.out --threshold 80 --summary
 
 all: build
 
@@ -40,6 +40,5 @@ clean:
 
 lint:
 	golangci-lint run ./...
-	goint ./...
 run:
 	$(GORUN) $(c)

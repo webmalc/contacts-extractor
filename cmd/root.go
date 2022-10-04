@@ -11,10 +11,10 @@ import (
 
 // CommandRouter is the main commands router.
 type CommandRouter struct {
-	logger    ErrorLogger
+	logger    errorLogger
 	config    *Config
-	formatter Formatter
-	extractor Extractor
+	formatter formatter
+	extractor extractor
 	rootCmd   *cobra.Command
 }
 
@@ -67,7 +67,7 @@ func (r *CommandRouter) Run() {
 
 // NewCommandRouter creates a new CommandRouter.
 func NewCommandRouter(
-	log ErrorLogger, extractor Extractor, formatter Formatter,
+	log errorLogger, extractor extractor, formatter formatter,
 ) CommandRouter {
 	config := NewConfig()
 

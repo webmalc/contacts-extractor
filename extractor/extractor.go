@@ -1,39 +1,50 @@
 package extractor
 
+import (
+	"github.com/webmalc/contacts-extractor/extractor/extractors"
+	"golang.org/x/exp/slices"
+)
+
 // Extractor is a contacts extractor.
 type Extractor struct {
-	sources        map[string]SourceExtractor
-	merger         Merger
-	phoneValidator Validator
-	emailValidator Validator
-	vkValidator    Validator
+	sources map[string]sourceExtractor
+	merger  mergerer
 }
 
 // Extract extracts contacts from the sources.
 func (e *Extractor) Extract(
 	sources []string, contacts []string,
 ) map[string][]string {
-	// TODO: write validators
-	// TODO: write merger
-	// TODO: merge sources in loop -> validate sources -> return
-	return map[string][]string{
-		"phone":  {"111", "222"},
-		"emails": {"sd", "adf"},
+	result := map[string][]string{}
+
+	for id, source := range e.sources {
+		if !slices.Contains(sources, id) {
+			continue
+		}
+		result = e.merger.merge(result, source.Extract(contacts))
 	}
+
+	return result
 }
 
 // AddSource adds a source.
-func (e *Extractor) AddSource(id string, source SourceExtractor) {
+func (e *Extractor) AddSource(id string, source sourceExtractor) {
 	e.sources[id] = source
 }
 
-// NewCSV returns the extractor object.
+// NewExtractor returns the extractor object.
 func NewExtractor(
-	phoneValidator, emailValidator, vkValidator Validator,
+	phoneValidator, emailValidator, vkValidator validator,
 ) *Extractor {
-	return &Extractor{
-		phoneValidator: phoneValidator,
-		emailValidator: emailValidator,
-		vkValidator:    vkValidator,
+	e := &Extractor{
+		merger: newMerger(map[string]validator{
+			"email": emailValidator,
+			"phone": phoneValidator,
+			"vk":    vkValidator,
+		}),
+		sources: map[string]sourceExtractor{},
 	}
+	e.AddSource("yeahdesk", extractors.NewYeahdesk())
+
+	return e
 }

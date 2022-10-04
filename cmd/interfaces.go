@@ -1,21 +1,16 @@
 package cmd
 
-// ErrorLogger logs errors.
-type ErrorLogger interface {
+// errorLogger logs errors.
+type errorLogger interface {
 	Error(args ...interface{})
 }
 
-// Runner runs the command.
-type Runner interface {
-	Run(names []string)
-}
-
-// Extractor extracts contacts.
-type Extractor interface {
+// extractor extracts contacts.
+type extractor interface {
 	Extract(sources []string, contacts []string) map[string][]string
 }
 
-// Formatter format the results.
-type Formatter interface {
+// formatter format the results.
+type formatter interface {
 	Format(results map[string][]string) string
 }
