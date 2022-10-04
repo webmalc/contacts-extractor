@@ -1,6 +1,7 @@
 package extractor
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,11 +18,12 @@ func Test_merger_merge(t *testing.T) {
 		"phone": {"111", "222", "222"},
 		"email": {"foo", "bar", "foo", "foo"},
 	})
-	assert.Equal(t, map[string][]string{
-		"phone": {"111", "222", "555"},
-		"email": {"foo", "bar", "spam"},
-		"vk":    {"id111", "id222"},
-	}, r)
+	sort.Strings(r["vk"])
+	sort.Strings(r["phone"])
+	sort.Strings(r["email"])
+	assert.Equal(t, []string{"id111", "id222"}, r["vk"])
+	assert.Equal(t, []string{"111", "222", "555"}, r["phone"])
+	assert.Equal(t, []string{"bar", "foo", "spam"}, r["email"])
 }
 
 // Must return a new object.

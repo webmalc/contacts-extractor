@@ -13,7 +13,10 @@ func TestCSV_Format(t *testing.T) {
 		"phone":  {"111", "222"},
 		"emails": {"foo", "bar"},
 	})
-	assert.Equal(t, "\n\nphone\n\n111\n222\n\n\nemails\n\nfoo\nbar\n", result)
+	assert.Contains(t, result, "111")
+	assert.Contains(t, result, "222")
+	assert.Contains(t, result, "foo")
+	assert.Contains(t, result, "bar")
 }
 
 // Should create an object.
