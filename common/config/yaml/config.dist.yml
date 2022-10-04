@@ -1,0 +1,3 @@
+log_path: logs/app.log
+is_prod: true
+timezone: UTC
