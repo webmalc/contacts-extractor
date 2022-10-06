@@ -44,7 +44,8 @@ func NewExtractor(
 		}),
 		sources: map[string]sourceExtractor{},
 	}
-	e.AddSource("yeahdesk", extractors.NewYeahdesk())
+	// e.AddSource("yeahdesk", extractors.NewYeahdesk())
+	e.AddSource("email", extractors.NewEmailsExtractor())
 
 	return e
 }

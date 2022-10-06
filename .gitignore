@@ -31,4 +31,6 @@ public/system
 tmp
 logs/*
 !logs/.gitkeep
+emails/*
+!emails/.gitkeep
 __debug_bin
