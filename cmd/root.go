@@ -38,6 +38,7 @@ func (r *CommandRouter) getFlag(
 
 // admin runs the server.
 func (r *CommandRouter) extract(cmd *cobra.Command, args []string) {
+	// TODO: remove
 	start := time.Now()
 	results := r.extractor.Extract(
 		r.getFlag(cmd, "sources", r.config.Sources),
@@ -45,6 +46,7 @@ func (r *CommandRouter) extract(cmd *cobra.Command, args []string) {
 	)
 
 	fmt.Println(r.formatter.Format(results)) // nolint // output
+	// TODO: remove
 	fmt.Printf("%s took %v\n", "script", time.Since(start))
 }
 

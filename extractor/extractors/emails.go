@@ -16,7 +16,7 @@ type EmailsExtractor struct {
 	excludeFilenames []string
 }
 
-func (s *EmailsExtractor) processFile(filename string) []string {
+func (s *EmailsExtractor) processFile(ch chan []string, filename string) {
 	policy := bluemonday.StrictPolicy()
 	replacer := strings.NewReplacer("(", "", ")", "", "-", "")
 	results := []string{}
@@ -40,12 +40,13 @@ func (s *EmailsExtractor) processFile(filename string) []string {
 		}
 	}
 
-	return results
+	ch <- results
 }
 
 // Extract extracts contacts.
 func (s *EmailsExtractor) Extract(contacts []string) map[string][]string {
 	results := map[string][]string{}
+	ch := make(chan []string)
 	if !slices.Contains(contacts, "phone") {
 		return results
 	}
@@ -55,11 +56,20 @@ func (s *EmailsExtractor) Extract(contacts []string) map[string][]string {
 		panic(err)
 	}
 
+	filenames := []string{}
+
 	for _, f := range files {
 		if slices.Contains(s.excludeFilenames, f.Name()) {
 			continue
 		}
-		results["phone"] = append(results["phone"], s.processFile(f.Name())...)
+		filenames = append(filenames, f.Name())
+	}
+
+	for _, filename := range filenames {
+		go s.processFile(ch, filename)
+	}
+	for range filenames {
+		results["phone"] = append(results["phone"], <-ch...)
 	}
 
 	return results
