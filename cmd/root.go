@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -38,16 +37,12 @@ func (r *CommandRouter) getFlag(
 
 // admin runs the server.
 func (r *CommandRouter) extract(cmd *cobra.Command, args []string) {
-	// TODO: remove
-	start := time.Now()
 	results := r.extractor.Extract(
 		r.getFlag(cmd, "sources", r.config.Sources),
 		r.getFlag(cmd, "contacts", r.config.Contacts),
 	)
 
 	fmt.Println(r.formatter.Format(results)) // nolint // output
-	// TODO: remove
-	fmt.Printf("%s took %v\n", "script", time.Since(start))
 }
 
 // Run the router.
