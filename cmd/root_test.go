@@ -44,6 +44,7 @@ func TestCommandRouter_extract(t *testing.T) {
 	command := &cobra.Command{}
 	command.Flags().StringSlice("sources", []string{}, "")
 	command.Flags().StringSlice("contacts", []string{}, "")
+	command.Flags().String("fromDate", "", "")
 
 	e.On(
 		"Extract", mock.Anything, mock.Anything,
