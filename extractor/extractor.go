@@ -1,6 +1,8 @@
 package extractor
 
 import (
+	"time"
+
 	"github.com/webmalc/contacts-extractor/extractor/extractors"
 	"golang.org/x/exp/slices"
 )
@@ -13,7 +15,7 @@ type Extractor struct {
 
 // Extract extracts contacts from the sources.
 func (e *Extractor) Extract(
-	sources []string, contacts []string,
+	sources []string, contacts []string, fromDatetime *time.Time,
 ) map[string][]string {
 	result := map[string][]string{}
 
@@ -21,7 +23,7 @@ func (e *Extractor) Extract(
 		if !slices.Contains(sources, id) {
 			continue
 		}
-		result = e.merger.merge(result, source.Extract(contacts))
+		result = e.merger.merge(result, source.Extract(contacts, fromDatetime))
 	}
 
 	return result

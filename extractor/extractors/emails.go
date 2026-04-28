@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/microcosm-cc/bluemonday"
 	"golang.org/x/exp/slices"
@@ -44,7 +45,7 @@ func (s *EmailsExtractor) processFile(ch chan []string, filename string) {
 }
 
 // Extract extracts contacts.
-func (s *EmailsExtractor) Extract(contacts []string) map[string][]string {
+func (s *EmailsExtractor) Extract(contacts []string, fromDatetime *time.Time) map[string][]string {
 	results := map[string][]string{}
 	ch := make(chan []string)
 	if !slices.Contains(contacts, "phone") {

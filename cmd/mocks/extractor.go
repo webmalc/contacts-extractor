@@ -1,6 +1,8 @@
 package mocks
 
 import (
+	"time"
+
 	"github.com/stretchr/testify/mock"
 )
 
@@ -11,7 +13,7 @@ type Extractor struct {
 
 // Extract is method mock.
 func (r *Extractor) Extract(
-	sources []string, contacts []string,
+	sources []string, contacts []string, fromDatetime *time.Time,
 ) map[string][]string {
 	arg := r.Called(sources, contacts)
 

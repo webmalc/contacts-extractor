@@ -1,5 +1,7 @@
 package cmd
 
+import "time"
+
 // errorLogger logs errors.
 type errorLogger interface {
 	Error(args ...interface{})
@@ -7,7 +9,7 @@ type errorLogger interface {
 
 // extractor extracts contacts.
 type extractor interface {
-	Extract(sources []string, contacts []string) map[string][]string
+	Extract(sources []string, contacts []string, fromDatetime *time.Time) map[string][]string
 }
 
 // formatter format the results.

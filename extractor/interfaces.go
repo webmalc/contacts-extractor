@@ -1,8 +1,10 @@
 package extractor
 
+import "time"
+
 // SourceExtractor extracts contacts from the source.
 type sourceExtractor interface {
-	Extract(contacts []string) map[string][]string
+	Extract(contacts []string, fromDatetime *time.Time) map[string][]string
 }
 
 // Validator validates contacts.

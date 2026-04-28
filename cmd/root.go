@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -35,11 +36,28 @@ func (r *CommandRouter) getFlag(
 	return elements
 }
 
+func (r *CommandRouter) getFromDatetime(cmd *cobra.Command) *time.Time {
+	timeStr, err := cmd.Flags().GetString("fromDate")
+	if err != nil {
+		panic(err)
+	}
+	if timeStr == "" {
+		return nil
+	}
+	result, err := time.Parse("02.01.2006", timeStr)
+	if err != nil {
+		panic(err)
+	}
+
+	return &result
+}
+
 // admin runs the server.
 func (r *CommandRouter) extract(cmd *cobra.Command, args []string) {
 	results := r.extractor.Extract(
 		r.getFlag(cmd, "sources", r.config.Sources),
 		r.getFlag(cmd, "contacts", r.config.Contacts),
+		r.getFromDatetime(cmd),
 	)
 
 	fmt.Println(r.formatter.Format(results)) // nolint // output
@@ -57,6 +75,9 @@ func (r *CommandRouter) Run() {
 	)
 	extractCmd.Flags().StringSlice(
 		"contacts", r.config.Contacts, "Contacts to extract.",
+	)
+	extractCmd.Flags().String(
+		"fromDate", "", "From date. Format: 27.09.2026",
 	)
 	r.rootCmd.AddCommand(extractCmd)
 	err := r.rootCmd.Execute()

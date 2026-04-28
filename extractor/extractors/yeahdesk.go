@@ -13,11 +13,16 @@ import (
 
 // yeahdeskPerson is the response schema from the remote server.
 type yeahdeskPerson struct {
-	Contacts []struct {
+	UpdatedAt int64
+	Contacts  []struct {
 		Value  any
 		Type   string
 		Origin string
 	}
+}
+
+func (p yeahdeskPerson) GetUpdatedAt() time.Time {
+	return time.UnixMilli(p.UpdatedAt)
 }
 
 // Yeahdesk is a source.
@@ -58,7 +63,7 @@ func (s *Yeahdesk) getRemoteData(page int) []yeahdeskPerson {
 }
 
 // Extract extracts contacts.
-func (s *Yeahdesk) Extract(contacts []string) map[string][]string {
+func (s *Yeahdesk) Extract(contacts []string, fromDatetime *time.Time) map[string][]string {
 	persons := []yeahdeskPerson{}
 	for page := 0; ; page++ {
 		p := s.getRemoteData(page)
@@ -66,10 +71,14 @@ func (s *Yeahdesk) Extract(contacts []string) map[string][]string {
 			break
 		}
 		persons = append(persons, s.getRemoteData(page)...)
+		break
 	}
 	results := map[string][]string{}
 
 	for _, p := range persons {
+		if fromDatetime != nil && p.GetUpdatedAt().Before(*fromDatetime) {
+			continue
+		}
 		for _, c := range p.Contacts {
 			if slices.Contains(contacts, "email") && c.Type == "mail" {
 				results["email"] = append(
